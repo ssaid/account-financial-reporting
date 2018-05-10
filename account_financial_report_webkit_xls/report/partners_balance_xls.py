@@ -35,7 +35,7 @@ def display_line(all_comparison_lines):
 
 
 class partners_balance_xls(report_xls):
-    column_sizes = [12, 40, 25, 17, 17, 17, 17, 17]
+    column_sizes = [12, 40, 25, 25, 17, 17, 17, 17, 17]
 
     def print_title(self, ws, _p, row_position, xlwtlib, _xs):
         cell_style = xlwtlib.easyxf(_xs['xls_title'])
@@ -71,7 +71,7 @@ class partners_balance_xls(report_xls):
             ('df', 1, 0, 'text', _p.filter_form(data) == 'filter_date' and _(
                 'Dates Filter') or _('Periods Filter'), None,
              cell_style_center),
-            ('pf', 1, 0, 'text',  _('Partners Filter'),
+            ('pf', 2, 0, 'text',  _('Partners Filter'),
              None, cell_style_center),
             ('tm', 1, 0, 'text',  _('Target Moves'), None, cell_style_center),
             ('ib', 1, 0, 'text',  _('Initial Balance'),
@@ -110,7 +110,7 @@ class partners_balance_xls(report_xls):
             ('df', 1, 0, 'text', df, None, cell_style_center),
             ('tm', 1, 0, 'text', _p.display_partner_account(
                 data), None, cell_style_center),
-            ('pf', 1, 0, 'text', _p.display_target_move(
+            ('pf', 2, 0, 'text', _p.display_target_move(
                 data), None, cell_style_center),
             ('ib', 1, 0, 'text', initial_balance_text[
              _p.initial_balance_mode], None, cell_style_center),
@@ -168,6 +168,7 @@ class partners_balance_xls(report_xls):
             account_span = _p.initial_balance_mode and 2 or 3
         c_specs = [
             ('account', account_span, 0, 'text', _('Account / Partner Name')),
+            ('vat', 1, 0, 'text', _('VAT')),
             ('code', 1, 0, 'text', _('Code / Ref')),
         ]
         if _p.comparison_mode == 'no_comparison':
@@ -216,7 +217,7 @@ class partners_balance_xls(report_xls):
             _xs['fill'] + _xs['borders_all']
         cell_style = xlwtlib.easyxf(cell_format)
         c_specs = [
-            ('acc_title', 7, 0, 'text', ' - '.join([current_account.code,
+            ('acc_title', 8, 0, 'text', ' - '.join([current_account.code,
                                                     current_account.name])), ]
         row_data = self.xls_row_template(c_specs, [x[0] for x in c_specs])
         row_position = self.xls_write_row(
@@ -334,7 +335,7 @@ class partners_balance_xls(report_xls):
             # Name-Code/ref-Balance Year-Balance Year2-Balance C2-Balance C3"
             row_pos = self.print_account_header(ws, _p, _xs, xlwt, row_pos)
 
-            for (partner_code_name, partner_id, partner_ref, partner_name) \
+            for (partner_code_name, partner_id, vat, partner_ref, partner_name) \
                     in partners_order:
                 partner = current_partner_amounts.get(partner_id, {})
                 # in single mode, we have to display all the partners even if
@@ -360,6 +361,8 @@ class partners_balance_xls(report_xls):
                 c_specs = [('acc_title', account_span, 0, 'text',
                             partner_name if partner_name else
                             _('Unallocated'))]
+                c_specs += [('vat', 1, 0, 'text',
+                             vat if vat else '')]
                 c_specs += [('partner_ref', 1, 0, 'text',
                              partner_ref if partner_ref else '')]
                 if _p.comparison_mode == 'no_comparison':
