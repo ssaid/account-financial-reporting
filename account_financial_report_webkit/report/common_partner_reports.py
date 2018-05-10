@@ -363,7 +363,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
             # big
             sql = ("SELECT name|| ' ' ||CASE WHEN ref IS NOT NULL \
                                 THEN '('||ref||')' \
-                                ELSE '' END, id, ref, name"
+                                ELSE '' END, id, vat, ref, name"
                    "  FROM res_partner \
                       WHERE id IN %s ORDER BY LOWER(name), ref")
             self.cursor.execute(sql, (tuple(set(existing_partner_ids)),))
@@ -371,7 +371,7 @@ class CommonPartnersReportHeaderWebkit(CommonReportHeaderWebkit):
 
         # move lines without partners, set None for empty partner
         if not all(partner_ids):
-            res.append((None, None, None, None))
+            res.append((None, None, None, None, None))
 
         if not res:
             return []
