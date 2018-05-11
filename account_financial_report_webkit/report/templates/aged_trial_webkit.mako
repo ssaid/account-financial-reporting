@@ -123,7 +123,7 @@
                   </div>
                   <div class="act_as_tbody">
                     %if not acc.aged_lines_by_invoice:
-                      %for partner_name, p_id, p_ref, p_name in acc.partners_order:
+                      %for partner_name, p_id, vat, p_ref, p_name in acc.partners_order:
                          %if acc.aged_lines.get(p_id):
                          <div class="act_as_row lines" style="page-break-inside: avoid">
                            <%line = acc.aged_lines[p_id]%>
@@ -142,7 +142,7 @@
                          %endif
                       %endfor
                     %else:
-                      %for partner_name, p_id, p_ref, p_name in acc.partners_order:
+                      %for partner_name, p_id, vat, p_ref, p_name in acc.partners_order:
                         %if acc.aged_lines.get(p_id):
                           <div class="act_as_row lines" style="page-break-inside: avoid">
                            <%line = acc.aged_lines[p_id]%>

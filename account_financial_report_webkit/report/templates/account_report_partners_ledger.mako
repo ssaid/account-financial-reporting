@@ -81,7 +81,7 @@
 
                 <div class="account_title bg" style="width: 1080px; margin-top: 20px; font-size: 12px;">${account.code} - ${account.name}</div>
 
-                %for partner_name, p_id, p_ref, p_name in account.partners_order:
+                %for partner_name, p_id, vat, p_ref, p_name in account.partners_order:
                 <%
                   total_debit = 0.0
                   total_credit = 0.0
