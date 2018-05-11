@@ -730,7 +730,7 @@ class open_invoices_xls(report_xls):
         if account.grouped_ledger_lines and account.partners_order:
             row_start_account = row_pos
 
-            for partner_name, p_id, p_ref, p_name in account.partners_order:
+            for partner_name, p_id, vat, p_ref, p_name in account.partners_order:
                 row_pos = self.print_row_code_account(
                     "regroup", account, row_pos, partner_name)
 
@@ -765,7 +765,7 @@ class open_invoices_xls(report_xls):
             # Print account line: code - account
             row_pos = self.print_row_code_account(
                 "noregroup", account, row_pos, "")
-            for partner_name, p_id, p_ref, p_name in account.partners_order:
+            for partner_name, p_id, p_ref, vat, p_name in account.partners_order:
 
                 # Print partner row
                 row_pos = self.print_row_partner(row_pos, partner_name)

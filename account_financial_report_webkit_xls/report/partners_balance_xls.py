@@ -236,7 +236,7 @@ class partners_balance_xls(report_xls):
             ('acc_title', 2, 0, 'text', current_account.name),
             ('code', 1, 0, 'text', current_account.code),
         ]
-        for column in range(3, 7):
+        for column in range(4, 8):
             # in case of one single comparison, the column 6 will contain
             # percentages
             if (_p.comparison_mode == 'single' and column == 6):
@@ -368,16 +368,16 @@ class partners_balance_xls(report_xls):
                 if _p.comparison_mode == 'no_comparison':
                     bal_formula = ''
                     if _p.initial_balance_mode:
-                        init_bal_cell = rowcol_to_cell(row_pos, 3)
+                        init_bal_cell = rowcol_to_cell(row_pos, 4)
                         bal_formula = init_bal_cell + '+'
-                        debit_col = 4
+                        debit_col = 5
                         c_specs += [
                             ('init_bal', 1, 0, 'number', partner.get(
                                 'init_balance', 0.0), None,
                              regular_cell_style_decimal),
                         ]
                     else:
-                        debit_col = 3
+                        debit_col = 4
                     c_specs += [
                         ('debit', 1, 0, 'number', partner.get('debit', 0.0),
                          None, regular_cell_style_decimal),

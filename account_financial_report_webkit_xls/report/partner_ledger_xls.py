@@ -233,7 +233,7 @@ class partner_ledger_xls(report_xls):
                     ws, row_pos, row_data, c_title_cell_style)
                 row_pos += 1
 
-                for partner_name, p_id, p_ref, p_name in \
+                for partner_name, p_id, vat, p_ref, p_name in \
                         account.partners_order:
 
                     total_debit = 0.0
