@@ -108,9 +108,9 @@ class partners_balance_xls(report_xls):
             df += _p.stop_period.name if _p.stop_period else u''
         c_specs += [
             ('df', 1, 0, 'text', df, None, cell_style_center),
-            ('tm', 1, 0, 'text', _p.display_partner_account(
+            ('tm', 2, 0, 'text', _p.display_partner_account(
                 data), None, cell_style_center),
-            ('pf', 2, 0, 'text', _p.display_target_move(
+            ('pf', 1, 0, 'text', _p.display_target_move(
                 data), None, cell_style_center),
             ('ib', 1, 0, 'text', initial_balance_text[
              _p.initial_balance_mode], None, cell_style_center),
