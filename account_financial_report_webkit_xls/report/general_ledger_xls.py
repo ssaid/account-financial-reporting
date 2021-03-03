@@ -49,6 +49,7 @@ _column_sizes = [
     ('journal', 12),
     ('account_code', 12),
     ('partner', 30),
+    ('partner_po', 30),
     ('ref', 30),
     ('label', 45),
     ('counterpart', 30),
@@ -64,7 +65,7 @@ COLS_COA = 3
 COLS_FY = 1
 COLS_DF = 3
 COLS_AF = 1
-COLS_TM = 2
+COLS_TM = 3
 COLS_IB = 3
 
 # Full column span
@@ -73,6 +74,21 @@ COLS_TOT = sum((COLS_COA, COLS_FY, COLS_DF, COLS_AF, COLS_TM, COLS_IB))
 
 class general_ledger_xls(report_xls):
     column_sizes = [x[1] for x in _column_sizes]
+
+    def _get_partner_po(self, invoice_line_id):
+        cr = self.cr
+        uid = self.uid
+
+        if not invoice_line_id:
+            return ''
+
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoice_line = invoice_line_obj.browse(cr, uid, invoice_line_id)
+
+        clearance = invoice_line.clearance_id or \
+                    invoice_line.invoice_id.clearance_id or None
+
+        return clearance and clearance.partner_id.name or ''
 
     def generate_xls_report(self, _p, _xs, data, objects, wb):
 
@@ -192,6 +208,7 @@ class general_ledger_xls(report_xls):
             ('account_code', 1, 0, 'text',
              _('Account'), None, c_hdr_cell_style),
             ('partner', 1, 0, 'text', _('Partner'), None, c_hdr_cell_style),
+            ('partner_po', 1, 0, 'text', _('Partner PO'), None, c_hdr_cell_style),
             ('ref', 1, 0, 'text', _('Reference'), None, c_hdr_cell_style),
             ('label', 1, 0, 'text', _('Label'), None, c_hdr_cell_style),
             ('counterpart', 1, 0, 'text',
@@ -258,7 +275,7 @@ class general_ledger_xls(report_xls):
                     cumul_balance_curr = account.init_balance.get(
                         'init_balance_currency') or 0.0
                     c_specs = [('empty%s' % x, 1, 0, 'text', None)
-                               for x in range(8)]
+                               for x in range(9)]
                     c_specs += [
                         ('init_bal', 1, 0, 'text', _('Initial Balance')),
                         ('counterpart', 1, 0, 'text', None),
@@ -312,6 +329,8 @@ class general_ledger_xls(report_xls):
                         ('account_code', 1, 0, 'text', account.code),
                         ('partner', 1, 0, 'text',
                          line.get('partner_name') or ''),
+                        ('partner_po', 1, 0, 'text',
+                         self._get_partner_po(line.get('invoice_line_id')) or ''),
                         ('ref', 1, 0, 'text', line.get('lref')),
                         ('label', 1, 0, 'text', label),
                         ('counterpart', 1, 0, 'text',
@@ -337,14 +356,14 @@ class general_ledger_xls(report_xls):
                     row_pos = self.xls_write_row(
                         ws, row_pos, row_data, ll_cell_style)
 
-                debit_start = rowcol_to_cell(row_start, 10)
-                debit_end = rowcol_to_cell(row_pos - 1, 10)
+                debit_start = rowcol_to_cell(row_start, 11)
+                debit_end = rowcol_to_cell(row_pos - 1, 11)
                 debit_formula = 'SUM(' + debit_start + ':' + debit_end + ')'
-                credit_start = rowcol_to_cell(row_start, 11)
-                credit_end = rowcol_to_cell(row_pos - 1, 11)
+                credit_start = rowcol_to_cell(row_start, 12)
+                credit_end = rowcol_to_cell(row_pos - 1, 12)
                 credit_formula = 'SUM(' + credit_start + ':' + credit_end + ')'
-                balance_debit = rowcol_to_cell(row_pos, 10)
-                balance_credit = rowcol_to_cell(row_pos, 11)
+                balance_debit = rowcol_to_cell(row_pos, 11)
+                balance_credit = rowcol_to_cell(row_pos, 12)
                 balance_formula = balance_debit + '-' + balance_credit
                 c_specs = [
                     ('acc_title', COLS_TOT - 4, 0, 'text',

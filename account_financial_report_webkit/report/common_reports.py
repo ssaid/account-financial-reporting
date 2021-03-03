@@ -500,6 +500,7 @@ class CommonReportHeaderWebkit(common_report_header):
         '''
         return """
             l.id AS id,
+            l.invoice_line_id AS invoice_line_id,
             l.date AS ldate,
             j.code AS jcode ,
             j.type AS jtype,
